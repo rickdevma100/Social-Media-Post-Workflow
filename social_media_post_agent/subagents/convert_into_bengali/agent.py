@@ -3,32 +3,33 @@ Facebook Post Generator Agent
 
 This agent generates the initial Facebook post before refinement.
 """
-
+from google.adk.agents import LoopAgent, SequentialAgent
 from google.adk.agents.llm_agent import LlmAgent
+from .post_generator.agent import initial_post_generator
+from .bengali_reviewer.agent import bengali_reviewer
+from .bengali_refiner.agent import bengali_refiner
 
 # Constants
 GEMINI_MODEL = "gemini-2.0-flash"
 
-# Define the Initial Post Generator Agent
-language_translation_agent = LlmAgent(
-    name="language_translation_agent",
-    model=GEMINI_MODEL,
-    instruction="""You are a 30‑year veteran in Bengali literary expression.
+# Create the Refinement Loop Agent
+refinement_loop = LoopAgent(
+    name="PostRefinementLoop",
+    max_iterations=1,
+    sub_agents=[
+        bengali_reviewer,
+        bengali_refiner,
+    ],
+    description="Iteratively reviews and refines a Facebook post until quality requirements are met",
+)
 
-    Please translate the following post `{current_post}` into Bengali, fully capturing its emotion and nuance—not just word‑for‑word. Write in simple yet profound language.  
-    Your translation must be 1000–1500 characters long, include emojis for emotional emphasis, sprinkle in trending English hashtags (e.g., #Inspiration, #LifeGoals), and exude genuine enthusiasm.
-    Choose at-most 7 english words keep those as it is, no need to translate it.
-    ## STYLE REQUIREMENTS
-    - Between 1000-1500 characters
-    - Include emojis
-    - Keep the place's name in English only
-    - Take special care while you are translating the greetings.
-    - Use Kolkata Bengali for sure not Bangladeshi Bengali.
-    - Please make sure all the verbs are wtitten in a proper way
-    
-    ## OUTPUT INSTRUCTIONS
-    - Return only the translated post—no additional commentary, formatting tags, or explanations.
-    """,
-    description="Translate the Post into Bengali with Emotion",
-    output_key="current_post",
+# Define the Initial Post Generator Agent
+language_translation_agent = SequentialAgent(
+    name="BengaliGenerationPipeline",
+    sub_agents=[
+        initial_post_generator,  # Step 1: Generate initial post
+        refinement_loop,  # Step 2: Review and refine in a loop
+
+    ],
+    description="Generates and refines a Facebook post through an iterative review process",
 )

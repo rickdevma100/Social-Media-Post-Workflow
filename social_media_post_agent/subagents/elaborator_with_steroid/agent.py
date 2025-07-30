@@ -14,7 +14,7 @@ from .post_reviewer.agent import post_reviewer
 # Create the Refinement Loop Agent
 refinement_loop = LoopAgent(
     name="PostRefinementLoop",
-    max_iterations=8,
+    max_iterations=1,
     sub_agents=[
         post_reviewer,
         post_refiner,

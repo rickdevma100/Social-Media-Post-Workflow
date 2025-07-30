@@ -18,7 +18,7 @@ post_reviewer = LlmAgent(
     model=GEMINI_MODEL,
     instruction="""You are a Facebook Post Quality Reviewer.
 
-    Your task is to evaluate the quality of a Facebook post about Agent Development Kit (ADK).
+    Your task is to evaluate the quality of a Facebook post.
     
     ## EVALUATION PROCESS
     1. Use the count_characters tool to check the post's length.
