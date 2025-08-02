@@ -9,11 +9,13 @@ from google.adk.tools import ToolContext
 from typing import Any, Dict
 
 from .tools.gmail_utility import create_message, create_draft, authenticate_gmail
-from ....constants import GEMINI_MODEL
+from ...constants import GEMINI_MODEL
 import os
+
+
 # Constants
 
-def gmail_tool(tool_context: ToolContext) -> Dict[str, Any]:
+def gmail_tool(tool_context: ToolContext) -> str | dict[Any, Any]:
     """
     Call this function ONLY when the post meets all quality requirements and
     sending mail is required
@@ -32,14 +34,20 @@ def gmail_tool(tool_context: ToolContext) -> Dict[str, Any]:
 
         subject = "Meeting Minutes"
         message_text = tool_context.state.get("bengali_current_post")
-
+        print(f"message Test{message_text}")
         message = create_message(sender, to, subject, message_text)
+
         draft = create_draft(service, "me", message)
 
-        return f"Email sent successfully! Draft id: {draft['id']}"
+        return {
+            "Email": f"Email sent successfully! Draft id: {draft['id']}"
+        }
     except Exception as e:
-        return f"Error sending email: {e}"
-    return {}
+        return {
+            "Email-Error": f"Error sending email: {e}"
+        }
+
+
 
 # Define the Post Reviewer Agent
 gmail_content = LlmAgent(
@@ -47,7 +55,6 @@ gmail_content = LlmAgent(
     model=GEMINI_MODEL,
     instruction="""You are an agent who calls the gmail_tool and mails the final response
     """,
-    description="Mails the ",
-    tools=[gmail_tool],
-    output_key="bengali_review_feedback"
+    description="Mails the latest bengali post",
+    tools=[gmail_tool]
 )

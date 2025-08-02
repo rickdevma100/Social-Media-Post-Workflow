@@ -34,7 +34,7 @@ post_refiner = LlmAgent(
      5. If you are using any example of a person please **Mandetorily mention his or her name.
     
     ## STYLE REQUIREMENTS
-    - Between 1000-1500 characters
+    - Between 1000-2000 characters
     - Include emojis
     - Include Treanding hashtags
     - Show genuine enthusiasm

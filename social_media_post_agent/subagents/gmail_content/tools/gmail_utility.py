@@ -1,5 +1,7 @@
 import os
 import base64
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from google.auth.transport.requests import Request
@@ -9,6 +11,8 @@ from googleapiclient.discovery import build
 from email.message import EmailMessage
 
 import markdown
+
+from social_media_post_agent.constants import GENERATED_THUMBNAILS_DIR
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
@@ -24,6 +28,7 @@ HTML_TEMPLATE = """
     </body>
     </html>
 """
+
 
 def authenticate_gmail():
     """Shows basic usage of the Gmail API.
@@ -51,7 +56,7 @@ def authenticate_gmail():
                     "Please ensure you have downloaded your OAuth 2.0 credentials "
                     "from Google Cloud Console and placed them in the correct location."
                 )
-            
+
             flow = InstalledAppFlow.from_client_secrets_file(
                 credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
@@ -61,6 +66,7 @@ def authenticate_gmail():
 
     service = build('gmail', 'v1', credentials=creds)
     return service
+
 
 def create_message(sender, to, subject, message_text):
     """Create a message for an email.
@@ -75,7 +81,6 @@ def create_message(sender, to, subject, message_text):
         An object containing a base64url encoded email object.
     """
 
-
     # Create the Gmail API message payload
     # gmail_message = {'raw': raw_message}
     msg = MIMEMultipart()
@@ -83,14 +88,31 @@ def create_message(sender, to, subject, message_text):
     msg['From'] = sender
     msg['Subject'] = subject
 
+    file_path = os.path.join(GENERATED_THUMBNAILS_DIR, "youtube_thumbnail.png")
     # Set content with utf-8 encoding
     msg.attach(MIMEText(message_text, 'plain', 'utf-8'))
+    # msg.add_attachment(file_path, maintype='application', subtype='octet-stream', filename="youtube_thumbnail.png")
+
+    # File attachment
+    content_type = "application/octet-stream"
+    main_type, sub_type = content_type.split("/", 1)
+
+    with open(file_path, "rb") as f:
+        mime_part = MIMEBase(main_type, sub_type)
+        mime_part.set_payload(f.read())
+
+    # Encode the payload
+    encoders.encode_base64(mime_part)
+    filename = os.path.basename(file_path)
+    mime_part.add_header('Content-Disposition', 'attachment', filename=filename)
+    msg.attach(mime_part)
 
     # Encode message to base64url
     raw_message = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-    
+
     # The API expects a dictionary with a 'raw' key containing the encoded message
     return {'raw': raw_message}
+
 
 def create_draft(service, user_id, message_body):
     """Create and insert a draft email.

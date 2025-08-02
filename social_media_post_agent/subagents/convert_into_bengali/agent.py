@@ -4,7 +4,6 @@ Facebook Post Generator Agent
 This agent generates the initial Facebook post before refinement.
 """
 from google.adk.agents import LoopAgent, SequentialAgent
-from google.adk.agents.llm_agent import LlmAgent
 from .post_generator.agent import initial_post_generator
 from .bengali_reviewer.agent import bengali_reviewer
 from .bengali_refiner.agent import bengali_refiner
@@ -15,7 +14,7 @@ GEMINI_MODEL = "gemini-2.0-flash"
 # Create the Refinement Loop Agent
 refinement_loop = LoopAgent(
     name="PostRefinementLoop",
-    max_iterations=1,
+    max_iterations=5,
     sub_agents=[
         bengali_reviewer,
         bengali_refiner,

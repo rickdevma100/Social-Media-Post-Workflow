@@ -25,7 +25,7 @@ initial_post_generator = LlmAgent(
     4. ***Mandetorily use google_search tool and factually check your answer.
     
     ## STYLE REQUIREMENTS
-    - Between 1000-1500 characters
+    - Between 1000-2000 characters
     - Include emojis
     - Include Treanding hashtags
     - Show genuine enthusiasm

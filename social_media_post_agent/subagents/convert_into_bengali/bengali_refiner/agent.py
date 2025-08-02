@@ -30,7 +30,7 @@ bengali_refiner = LlmAgent(
     
     
     ## STYLE REQUIREMENTS
-        1. Between 1000-1500 characters
+        1. Between 1000-2000 characters
         2. Include emojis
         3. Include Treanding hashtags
     

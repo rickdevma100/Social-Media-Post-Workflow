@@ -19,8 +19,8 @@ initial_post_generator = LlmAgent(
     Your translation must be 1000–1500 characters long, include emojis for emotional emphasis, sprinkle in trending English hashtags (e.g., #Inspiration, #LifeGoals), and exude genuine enthusiasm.
     Choose at-most 7 english words keep those as it is, no need to translate it.
     ## STYLE REQUIREMENTS
-    - Between 1000-1500 characters
-    - Include emojis
+    - Between 1000-2000 characters
+    - Include emojis, But very less
     - Keep the place's name in English only
     - Take special care while you are translating the greetings.
     - Use Kolkata Bengali for sure do not Bangladeshi Bengali.

@@ -14,7 +14,7 @@ from ....constants import GEMINI_MODEL
 bengali_reviewer = LlmAgent(
     name="BengaliPostReviewer",
     model=GEMINI_MODEL,
-    instruction="""You are a Bengali  Quality Reviewer.
+    instruction="""You are a Bengali Quality Reviewer.
 
     Your task is to evaluate the quality of a Bengali post.
     

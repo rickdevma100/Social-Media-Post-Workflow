@@ -34,8 +34,8 @@ post_reviewer = LlmAgent(
         3. Make sure The content is written in simple and deep words.
        
        - STYLE REQUIREMENTS:
-        1. Between 1000-1500 characters
-        2. Include emojis
+        1. Between 1000-2000 characters
+        2. Include emojis, But very less
         3. Include Treanding hashtags
         4. Show genuine enthusiasm
         5. Remove [news_search] if any
